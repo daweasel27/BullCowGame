@@ -8,22 +8,44 @@ FBullCowGame::FBullCowGame()
 int32 FBullCowGame::GetMaxTries() const { return MyMaxTries; }
 int32 FBullCowGame::GeCurrentTry() const { return MyCurrentTry; }
 int32 FBullCowGame::GetHiddenWordLength() const { return MyHiddenWord.length(); }
+bool FBullCowGame::IsGameWon() const { return GameIsWon; }
 
 void FBullCowGame::Reset()
 {
 	MyMaxTries = NUMBER_OF_TRIES;
 	MyCurrentTry = 1;
 	MyHiddenWord = HIDDEN_WORD;
+	GameIsWon = false;
 }
 
-bool FBullCowGame::IsGameWon() const
+void FBullCowGame::SetGameWon(bool GameWon)
 {
-	return false;
+	GameIsWon = GameWon;
 }
 
 EWordStatus FBullCowGame::CheckGuess(FString guess)
 {
-	return EWordStatus::OK;
+	for (size_t i = 0; i < guess.length(); i++)
+	{
+		if (!islower(guess[i])) {
+			return EWordStatus::NOT_LOWERCASE;
+		}
+		for (size_t j = 0; j < guess.length(); j++)
+		{
+			if (i == j) continue;
+
+			if (guess[i] == guess[j]) {
+				return EWordStatus::NOT_ISOGRAM;
+			}
+
+		}
+	}
+	if (GetHiddenWordLength() != guess.length()) {
+		return EWordStatus::WRONG_LENGTH;
+	}
+	else {
+		return EWordStatus::OK;
+	}
 }
 
 BullCowCount FBullCowGame::CheckGuessValidity(FString guess)
@@ -50,9 +72,12 @@ BullCowCount FBullCowGame::CheckGuessValidity(FString guess)
 			}
 		}
 	}		
-	std::cout << BullCowCount.Bulls << std::endl;
 
-	std::cout << BullCowCount.Cows << std::endl;
-
+	if (BullCowCount.Bulls == WORD_LENGHT) {
+		SetGameWon(true);
+	}
+	else {
+		SetGameWon(false);
+	}
 	return BullCowCount;
 }

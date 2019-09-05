@@ -13,13 +13,9 @@ struct BullCowCount
 enum EWordStatus
 {
 	OK,
-	NOT_ISOGRAM
-};
-
-enum EResetStatus
-{
-	NO_HIDDEN_WORD,
-	OK
+	NOT_ISOGRAM,
+	NOT_LOWERCASE,
+	WRONG_LENGTH
 };
 
 class FBullCowGame {
@@ -30,6 +26,7 @@ public:
 	int32 GeCurrentTry() const;
 	int32 GetHiddenWordLength() const;
 	bool IsGameWon() const;
+	void SetGameWon(bool Game);
 
 	void Reset();
 	EWordStatus CheckGuess(FString);
@@ -39,5 +36,6 @@ private:
 	int32 MyCurrentTry;
 	int32 MyMaxTries;
 	FString MyHiddenWord;
+	bool GameIsWon = false;
 
 };
